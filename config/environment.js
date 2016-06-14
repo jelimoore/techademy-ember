@@ -20,8 +20,8 @@ module.exports = function(environment) {
           'default-src': "'self' ",
           'script-src': "'self' ",
           'font-src': "'self' ",
-          'connect-src': "'self' ",
-          'img-src': ["'self'", "https://www.google.com", "https://www.facebook.com", "http://www.unomaha.edu", "http://imgsrc.hubblesite.org"],
+          'connect-src': "'self' https://api.flickr.com",
+          'img-src': "'self' http: https:",
           'style-src': "'self' ",
           'media-src': "'self' "
     }
