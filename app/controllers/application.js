@@ -20,6 +20,10 @@ var PhotoCollection = Ember.ArrayProxy.extend(Ember.SortableMixin, {
 	content: [],
 });
 
+photos: PhotoCollection.create(),
+	searchField: '',
+	tagSearchField: '',
+
 export default Ember.Controller.extend({
 	photos: PhotoCollection.create(),
 	searchField: '',
