@@ -21,7 +21,7 @@ module.exports = function(environment) {
           'script-src': "'self' ",
           'font-src': "'self' ",
           'connect-src': "'self' ",
-          'img-src': "'self' ",
+          'img-src': ["'self'", "https://www.google.com", "https://www.facebook.com", "http://www.unomaha.edu", "http://imgsrc.hubblesite.org"],
           'style-src': "'self' ",
           'media-src': "'self' "
     }
