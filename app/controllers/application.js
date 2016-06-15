@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
 	photos: PhotoCollection.create(),
 	searchField: '',
 	tagSearchField: '',
+	tagList: ['hi','cheese'],
 	filteredPhotos: function () {
 		var filter = this.get('searchField');
 		var rx = new RegExp(filter, 'gi');
@@ -54,5 +55,28 @@ export default Ember.Controller.extend({
 				});
 			});
 		},
+		clicktag: function(tag){
+			this.set('tagSearchField', tag);
+			this.get('photos').content.clear();
+			this.store.unloadAll('photo');
+			this.send('getPhotos',tag);
+		},
+	},
+
+	init: function(){
+		this._super.apply(this, arguments);
+		var apiKey = 'b8294fdcfcd1cf6b8de9727fc5ca3cf2';
+		var host = 'https://api.flickr.com/services/rest/';
+		var method = "flickr.tags.getHotList";
+		var requestURL = host + "?method="+method+"&api_key="+apiKey+"&count=100&format=json&nojsoncallback=1";
+		console.log(requestURL);
+		var t = this;
+		Ember.$.getJSON(requestURL, function(data){
+			console.log(data);
+			data.hottags.tag.map(function(tag){
+				t.get('tagList').pushObject(tag._content);
+			});
+		});
 	}
+
 });
