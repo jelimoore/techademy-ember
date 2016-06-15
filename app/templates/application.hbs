@@ -22,7 +22,12 @@
 		<ul class="list-group">
 			{{#each photo in filteredPhotos}}
 			<li class="list-group-item">
-				{{photo.title}} ({{photo.username}})<br>
+				Title: {{photo.title}}<br>
+				{{photo.description}}<br>
+				Views: {{photo.views}}<br>
+				Tags: {{#each tag in photo.tags}}{{tag}}, {{/each}}<br>
+				User: {{photo.owner.username}}<br>
+				Profile: <a href={{photo.link}}>{{photo.link}}</a>
 				<img class="feed-img" src={{photo.url}}>
 			</li>
 			{{/each}}
