@@ -1,32 +1,15 @@
 import Ember from 'ember';
 
-var Photo = Ember.Object.extend({
-	title: '',
-	username: '',
-	url: '',
-	owner: '',
-	id: '',
-	farm: 0,
-	secret: '',
-	server: '',
-	url: function(){
-		return "https://farm"+this.get('farm')+".staticflickr.com/"+this.get('server')+"/"+this.get('id')+"_"+this.get('secret')+"_b.jpg";
-	}.property('farm','server','id','secret'),
-});
-
 var PhotoCollection = Ember.ArrayProxy.extend(Ember.SortableMixin, {
 	sortProperties: ['title'],
 	sortAscending: true,
 	content: [],
 });
 
-photos: PhotoCollection.create(),
-	searchField: '',
-	tagSearchField: '',
-
 export default Ember.Controller.extend({
 	photos: PhotoCollection.create(),
 	searchField: '',
+	tagSearchField: '',
 	filteredPhotos: function () {
 		var filter = this.get('searchField');
 		var rx = new RegExp(filter, 'gi');
@@ -38,17 +21,27 @@ export default Ember.Controller.extend({
 	actions: {
 		search: function () {
 			this.get('filteredPhotos');
+			this.store.unloadAll('photo');
+			this.send('getPhotos',this.get('searchField'));
+			console.log("Searched stuff");
 		},
-		getPhotos: function(){
+		getPhotos: function(tag){
+			console.log("Getting photos...");
 			var apiKey = 'b8294fdcfcd1cf6b8de9727fc5ca3cf2';
 			var host = 'https://api.flickr.com/services/rest/';
 			var method = 'flickr.tags.getClusterPhotos';
-			var tag = "hi";
 			var requestURL = host + "?method="+method + "&api_key="+apiKey+"&tag="+tag+"&format=json&nojsoncallback=1";
 			var photos = this.get('photos');
+			var t = this;
+			console.log("Getting JSON...");
 			Ember.$.getJSON(requestURL, function(data){
+				console.log("JSON gotten. Parsing...");
+				console.log(data);
+				console.log(requestURL);
 				data.photos.photo.map(function(photo) {
-					var newPhotoItem = Photo.create({
+					console.log("Photos parsed. Data:\n\n");	
+					console.log("data");
+					var newPhotoItem = t.store.createRecord('photo',{
 						title: photo.title,
 						username: photo.username,
 						owner: photo.owner,
@@ -58,7 +51,7 @@ export default Ember.Controller.extend({
 						server: photo.server,
 					});
 					photos.pushObject(newPhotoItem);
-				})
+				});
 			});
 		},
 	}
